@@ -1,1 +1,1 @@
-web: webserver
+web: project-page
