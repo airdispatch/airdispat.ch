@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>The Airdispatch Blog</title>
+		<link href="/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/css/styles.css" rel="stylesheet">
+		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,600,700' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+
+		<div class="container" style="padding-top: 15px;">
+			<div class="row">
+				<div class="span3">
+					<a href="/">
+						<img src="/img/logo.png">
+					</a>
+					<a href="http://github.com/airdispatch/airdispatch-protocol/" class="flat-button large primary">Download</a>
+					<a href="http://github.com/airdispatch/ad-spec/" class="flat-button large">Documentation</a>
+				</div>
+				<div class="span8">
+					<h1>The Airdispatch Blog</h1>
+					<hr/>
+					{{ range .Posts }}
+						<div class="row blogpost">
+							<div class="span7 offset1">
+								<h3><a href="/blog/{{.URL}}">{{.Title}}</a></h3>
+								<h5>by {{.Author}} on {{.Date}}</h5>
+								<div class="body">
+									{{.Content}}
+								</div>
+							</div>
+						</div>
+						<hr/>
+					{{ else }}
+						<h2>No posts here.</h2>
+					{{ end }}
+				</div>
+			</div>
+			<hr/>
+			<div class="row">
+				<div class="span12 center">
+					<p>the airdispatch protocol is provided under the <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/LICENSE">MIT license</a></p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

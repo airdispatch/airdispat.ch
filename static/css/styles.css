@@ -66,3 +66,11 @@ div.border {
 .try-now span {
 	font-weight: 200;
 }
+
+.blogpost h5, .blogpost h3 {
+	margin: 0;
+}
+
+.blogpost h5 {
+	margin-bottom: 10px;
+}
