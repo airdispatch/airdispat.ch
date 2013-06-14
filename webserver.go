@@ -6,13 +6,13 @@ import (
 	"io"
 	"flag"
 	"fmt"
-	"net"
 	"html/template"
 	"path/filepath"
 	"github.com/russross/blackfriday"
 	"airdispat.ch/common"
 	"crypto/ecdsa"
 	"airdispat.ch/airdispatch"
+	clientFramework "airdispat.ch/client/framework"
 	"code.google.com/p/goprotobuf/proto"
 	"unicode"
 )
@@ -56,6 +56,7 @@ func webInit() {
 }
 
 func defineRoutes(s *web.Server) {
+	s.Get("/", displayTemplate("index.html"))
 	s.Get("/blog(.*)", blog)
 }
 
@@ -68,8 +69,9 @@ func getPost(url string, ctx *web.Context) []Post {
 }
 
 func getPosts() []Post {
-	mailserver := common.LookupLocation(adAddress, trackerLocation, serverKey)
-	allPosts := retrievePublicMessages(adAddress, serverKey, mailserver)
+	c := clientFramework.Client{}
+	c.Populate(serverKey)
+	allPosts, _ := c.DownloadPublicMail(trackerLocation, adAddress, 0)
 
 	formattedPosts := []Post{}
 
@@ -96,67 +98,6 @@ func getPosts() []Post {
 	}
 
 	return formattedPosts
-}
-
-func connectToServer(remote string) net.Conn {
-	address, _ := net.ResolveTCPAddr("tcp", remote)
-
-	// Connect to the Remote Mail Server
-	conn, err := net.DialTCP("tcp", nil, address)
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("Cannot connect to server.")
-		return nil
-	}
-	return conn
-}
-
-func retrievePublicMessages(toCheck string, key *ecdsa.PrivateKey, recipientServer string) []*airdispatch.Mail {
-	recipientConn := connectToServer(recipientServer)
-	since := uint64(0)
-	// Create the Request Object
-	messageRequest := &airdispatch.RetrieveData {
-		RetrievalType: common.RETRIEVAL_TYPE_PUBLIC(),
-		FromAddress: &toCheck,
-		SinceDate: &since,
-	}
-	requestData, _ := proto.Marshal(messageRequest)
-	sendData := common.CreateAirdispatchMessage(requestData, key, common.RETRIEVAL_MESSAGE)
-
-	// Send the Request to the Server
-	recipientConn.Write(sendData)
-
-	// Read the Message Response
-	data, messageType, _, err := common.ReadSignedMessage(recipientConn)
-	if err != nil {
-		return nil
-	}
-
-	// Ensure that we have been given an array of values
-	if messageType == common.ARRAY_MESSAGE {
-		// Get the array from the data
-		theArray := &airdispatch.ArrayedData{}
-		proto.Unmarshal(data, theArray)
-
-		// Find the number of messsages
-		mesNumber := theArray.NumberOfMessages
-
-		output := []*airdispatch.Mail{}
-
-		// Loop over this number
-		for i := uint32(0); i < *mesNumber; i++ {
-			// Get the message and unmarshal it
-			mesData, _, _, _ := common.ReadSignedMessage(recipientConn)
-			theMessage := &airdispatch.Mail{}
-			proto.Unmarshal(mesData, theMessage)
-
-			// Print the Message
-			output = append(output, theMessage)
-		}
-
-		return output
-	}
-	return nil
 }
 
 func loadDummyData() []Post {
@@ -189,6 +130,13 @@ func blog(ctx *web.Context, val string) {
 }
 
 // EVERYTHING BELOW THIS LINE IS BOILERPLATE
+
+type TemplateView func(ctx *web.Context)
+func displayTemplate(templateName string) TemplateView {
+	return func(ctx *web.Context) {
+		WriteTemplateToContext(templateName, ctx, nil)
+	}
+}
 
 func defineConstants() {
 	temp_dir := os.Getenv("WORK_DIR")
