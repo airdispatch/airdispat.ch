@@ -36,6 +36,14 @@ func main() {
 
 // START APPLICAITON-SPECIFIC CODE
 
+type Blog struct {
+	Address string
+	Trackers []string
+	Key *ecdsa.PrivateKey
+
+	AllPosts map[string]Post
+}
+
 type Post struct {
 	Title string
 	Author string
@@ -44,34 +52,41 @@ type Post struct {
 	Content template.HTML
 	plainText string
 }
-var all_posts map[string]Post
-var serverKey *ecdsa.PrivateKey
 
-var trackerLocation = []string{"localhost:1024"}
-var adAddress = "e7da159a65cb19a37c86b56f789e96c410a6a5b74a8a570f"
+var theBlog *Blog
 
 func webInit() {
-	all_posts = make(map[string]Post)
-	serverKey, _ = common.CreateKey()
+	serverKey, _ := common.CreateKey()
+
+	theBlog =  &Blog{
+		Address: "e7da159a65cb19a37c86b56f789e96c410a6a5b74a8a570f",
+		Trackers: []string{"localhost:1024"},
+		Key: serverKey,
+	}
+	theBlog.Initialize()
+}
+
+func (b *Blog) Initialize() {
+	b.AllPosts = make(map[string]Post)
 }
 
 func defineRoutes(s *web.Server) {
 	s.Get("/", displayTemplate("index.html"))
-	s.Get("/blog(.*)", blog)
+	s.Get("/blog(.*)", theBlog.WebGoBlog())
 }
 
-func getPost(url string, ctx *web.Context) []Post {
-	thePost, ok := all_posts[url]
+func (b *Blog) GetPost(url string) []Post {
+	thePost, ok := b.AllPosts[url]
 	if !ok {
 		return nil
 	}
 	return []Post{thePost}
 }
 
-func getPosts() []Post {
+func (b *Blog) GetPosts() []Post {
 	c := clientFramework.Client{}
-	c.Populate(serverKey)
-	allPosts, _ := c.DownloadPublicMail(trackerLocation, adAddress, 0)
+	c.Populate(b.Key)
+	allPosts, _ := c.DownloadPublicMail(b.Trackers, b.Address, 0)
 
 	formattedPosts := []Post{}
 
@@ -94,20 +109,13 @@ func getPosts() []Post {
 			}
 		}
 
-		formattedPosts = append(formattedPosts, CreatePost(toFormat))
+		formattedPosts = append(formattedPosts, b.CreatePost(toFormat))
 	}
 
 	return formattedPosts
 }
 
-func loadDummyData() []Post {
-	return []Post{
-		CreatePost(Post{"About this Blog", "Hunter Leath", "about-this-blog", "August 5", "hello, world.", ""}),
-		CreatePost(Post{"The Airdispatch Experiment", "Hunter Leath", "the-ad-expiriment", "August 1", " - Eat \n - Pray \n - Love", ""}),
-	}
-}
-
-func CreatePost(toFormat Post) Post {
+func (b *Blog) CreatePost(toFormat Post) Post {
 	theContent := template.HTML(string(blackfriday.MarkdownCommon([]byte(toFormat.plainText))))
 	thePost := Post{
 		Title: toFormat.Title,
@@ -115,18 +123,21 @@ func CreatePost(toFormat Post) Post {
 		URL: Slug(toFormat.Title),
 		Date: toFormat.Date,
 		Content: theContent}
-	all_posts[thePost.URL] = thePost
+	b.AllPosts[thePost.URL] = thePost
 	return thePost
 }
 
-func blog(ctx *web.Context, val string) {
-	context := make(map[string]interface{})
-	if val == "/" || val == "" {
-		context["Posts"] = getPosts()
-	} else {
-		context["Posts"] = getPost(val[1:], ctx)
+type WebGoRouter func(ctx *web.Context, val string)
+func (b *Blog) WebGoBlog() WebGoRouter {
+	return func(ctx *web.Context, val string) {
+		context := make(map[string]interface{})
+		if val == "/" || val == "" {
+			context["Posts"] = b.GetPosts()
+		} else {
+			context["Posts"] = b.GetPost(val[1:])
+		}
+		WriteTemplateToContext("blog.html", ctx, context)
 	}
-	WriteTemplateToContext("blog.html", ctx, context)
 }
 
 // EVERYTHING BELOW THIS LINE IS BOILERPLATE
