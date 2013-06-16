@@ -15,6 +15,7 @@ import (
 	clientFramework "airdispat.ch/client/framework"
 	"code.google.com/p/goprotobuf/proto"
 	"unicode"
+	"errors"
 )
 
 var WORKING_DIRECTORY string
@@ -72,21 +73,26 @@ func (b *Blog) Initialize() {
 
 func defineRoutes(s *web.Server) {
 	s.Get("/", displayTemplate("index.html"))
-	s.Get("/blog(.*)", theBlog.WebGoBlog())
+
+	blogTemp, _ := PARSED_TEMPLATES["blog.html"]
+	s.Get("/blog(.*)", theBlog.WebGoBlog(&blogTemp))
 }
 
-func (b *Blog) GetPost(url string) []Post {
+func (b *Blog) GetPost(url string) ([]Post, error) {
 	thePost, ok := b.AllPosts[url]
 	if !ok {
-		return nil
+		return nil, errors.New("Unable to Find Post with that URL")
 	}
-	return []Post{thePost}
+	return []Post{thePost}, nil
 }
 
-func (b *Blog) GetPosts() []Post {
+func (b *Blog) GetPosts() ([]Post, error) {
 	c := clientFramework.Client{}
 	c.Populate(b.Key)
-	allPosts, _ := c.DownloadPublicMail(b.Trackers, b.Address, 0)
+	allPosts, err := c.DownloadPublicMail(b.Trackers, b.Address, 0)
+	if err != nil {
+		return nil, err
+	}
 
 	formattedPosts := []Post{}
 
@@ -112,7 +118,7 @@ func (b *Blog) GetPosts() []Post {
 		formattedPosts = append(formattedPosts, b.CreatePost(toFormat))
 	}
 
-	return formattedPosts
+	return formattedPosts, nil
 }
 
 func (b *Blog) CreatePost(toFormat Post) Post {
@@ -128,15 +134,21 @@ func (b *Blog) CreatePost(toFormat Post) Post {
 }
 
 type WebGoRouter func(ctx *web.Context, val string)
-func (b *Blog) WebGoBlog() WebGoRouter {
+func (b *Blog) WebGoBlog(template *template.Template) WebGoRouter {
 	return func(ctx *web.Context, val string) {
+		var err error
 		context := make(map[string]interface{})
 		if val == "/" || val == "" {
-			context["Posts"] = b.GetPosts()
+			context["Posts"], err = b.GetPosts()
 		} else {
-			context["Posts"] = b.GetPost(val[1:])
+			context["Posts"], err = b.GetPost(val[1:])
 		}
-		WriteTemplateToContext("blog.html", ctx, context)
+		if err != nil {
+			ctx.Write([]byte(err.Error()))
+			return
+		}
+		template.Execute(ctx, context)
+		// WriteTemplateToContext("blog.html", ctx, context)
 	}
 }
 
