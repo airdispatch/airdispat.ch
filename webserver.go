@@ -8,14 +8,8 @@ import (
 	"fmt"
 	"html/template"
 	"path/filepath"
-	"github.com/russross/blackfriday"
+	"github.com/airdispatch/blog"
 	"airdispat.ch/common"
-	"crypto/ecdsa"
-	"airdispat.ch/airdispatch"
-	clientFramework "airdispat.ch/client/framework"
-	"code.google.com/p/goprotobuf/proto"
-	"unicode"
-	"errors"
 )
 
 var WORKING_DIRECTORY string
@@ -37,29 +31,12 @@ func main() {
 
 // START APPLICAITON-SPECIFIC CODE
 
-type Blog struct {
-	Address string
-	Trackers []string
-	Key *ecdsa.PrivateKey
-
-	AllPosts map[string]Post
-}
-
-type Post struct {
-	Title string
-	Author string
-	URL string
-	Date string
-	Content template.HTML
-	plainText string
-}
-
-var theBlog *Blog
+var theBlog *blog.Blog
 
 func webInit() {
 	serverKey, _ := common.CreateKey()
 
-	theBlog =  &Blog{
+	theBlog =  &blog.Blog{
 		Address: "e7da159a65cb19a37c86b56f789e96c410a6a5b74a8a570f",
 		Trackers: []string{"localhost:1024"},
 		Key: serverKey,
@@ -67,89 +44,11 @@ func webInit() {
 	theBlog.Initialize()
 }
 
-func (b *Blog) Initialize() {
-	b.AllPosts = make(map[string]Post)
-}
-
 func defineRoutes(s *web.Server) {
 	s.Get("/", displayTemplate("index.html"))
 
 	blogTemp, _ := PARSED_TEMPLATES["blog.html"]
 	s.Get("/blog(.*)", theBlog.WebGoBlog(&blogTemp))
-}
-
-func (b *Blog) GetPost(url string) ([]Post, error) {
-	thePost, ok := b.AllPosts[url]
-	if !ok {
-		return nil, errors.New("Unable to Find Post with that URL")
-	}
-	return []Post{thePost}, nil
-}
-
-func (b *Blog) GetPosts() ([]Post, error) {
-	c := clientFramework.Client{}
-	c.Populate(b.Key)
-	allPosts, err := c.DownloadPublicMail(b.Trackers, b.Address, 0)
-	if err != nil {
-		return nil, err
-	}
-
-	formattedPosts := []Post{}
-
-	for _, value := range(allPosts) {
-		byteTypes := value.Data
-		dataTypes := &airdispatch.MailData{}
-
-		proto.Unmarshal(byteTypes, dataTypes)
-
-		toFormat := Post{}
-		for _, dataObject := range(dataTypes.Payload) {
-			if *dataObject.TypeName == "blog/content" {
-				toFormat.plainText = string(dataObject.Payload)
-			} else if *dataObject.TypeName == "blog/author" {
-				toFormat.Author = string(dataObject.Payload)
-			} else if *dataObject.TypeName == "blog/date" {
-				toFormat.Date = string(dataObject.Payload)
-			} else if *dataObject.TypeName == "blog/title" {
-				toFormat.Title = string(dataObject.Payload)
-			}
-		}
-
-		formattedPosts = append(formattedPosts, b.CreatePost(toFormat))
-	}
-
-	return formattedPosts, nil
-}
-
-func (b *Blog) CreatePost(toFormat Post) Post {
-	theContent := template.HTML(string(blackfriday.MarkdownCommon([]byte(toFormat.plainText))))
-	thePost := Post{
-		Title: toFormat.Title,
-		Author: toFormat.Author, 
-		URL: Slug(toFormat.Title),
-		Date: toFormat.Date,
-		Content: theContent}
-	b.AllPosts[thePost.URL] = thePost
-	return thePost
-}
-
-type WebGoRouter func(ctx *web.Context, val string)
-func (b *Blog) WebGoBlog(template *template.Template) WebGoRouter {
-	return func(ctx *web.Context, val string) {
-		var err error
-		context := make(map[string]interface{})
-		if val == "/" || val == "" {
-			context["Posts"], err = b.GetPosts()
-		} else {
-			context["Posts"], err = b.GetPost(val[1:])
-		}
-		if err != nil {
-			ctx.Write([]byte(err.Error()))
-			return
-		}
-		template.Execute(ctx, context)
-		// WriteTemplateToContext("blog.html", ctx, context)
-	}
 }
 
 // EVERYTHING BELOW THIS LINE IS BOILERPLATE
@@ -264,23 +163,4 @@ func displayErrorPage(ctx *web.Context, error string) {
 	ctx.WriteString("<body><h1>Application Error</h1>")
 	ctx.WriteString("<p>" + error + "</p>")
 	ctx.WriteString("</body></html>")
-}
-
-var lat = []*unicode.RangeTable{unicode.Letter, unicode.Number}
-func Slug(s string) string {
-	buf := make([]rune, 0, len(s))
-	dash := false
-	for _, r := range s {
-		switch {
-		case unicode.IsOneOf(lat, r):
-			buf = append(buf, unicode.ToLower(r))
-			dash = true
-		case dash:
-			if dash {
-				buf = append(buf, '-')
-				dash = false
-			}
-		}
-	}
-	return string(buf)
 }
