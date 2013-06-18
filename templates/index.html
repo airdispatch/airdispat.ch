@@ -90,7 +90,7 @@
 					<div class="row">
 						<div class="span9">
 							<p>Airdispatch relies on several different components to provide a consistent user experience. This is summarized in the following sections.</p>
-							<h5>Overall Arcitecture</h5>
+							<h5>Overall Architecture</h5>
 							<p>As seen below, sending an airdispatch message contains many different operations. When a user wishes to send a message, the client must first <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L24">query the address tracker</a> to find the location of the user at that address (since addresses are location-agnostic). (This is assuming that the receiving user has already <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L16">registered their location with that tracker</a>.) The sending user's server would then <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L54">send a very small message</a> to the recipient's server alerting it to the new message. When the recipient user goes to access the message, his client will <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L64">download the message</a> from the sender user's server.</p>
 							<img src="/img/anatomy.png">
 							<div class='center'>
