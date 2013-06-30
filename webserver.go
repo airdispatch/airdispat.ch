@@ -21,10 +21,15 @@ var flag_port = flag.String("port", "", "specify the port that the server should
 
 func main() {
 	defineConstants()
-	webInit()
+
 	s := web.NewServer()
-	defineRoutes(s)
+	
+	webInit()
+
 	loadTemplates(getPath(TEMPLATE_DIRECTORY), "")
+	defineRoutes(s)
+
+
 	s.Config.StaticDir = WORKING_DIRECTORY + "/static"
 	s.Run("0.0.0.0:" + PORT)
 }
@@ -37,7 +42,7 @@ func webInit() {
 	serverKey, _ := common.CreateKey()
 
 	theBlog =  &blog.Blog{
-		Address: "e7da159a65cb19a37c86b56f789e96c410a6a5b74a8a570f",
+		Address: "aa7d324260a4eb75cc6d8a77ea9f9f7b40a9aa22e7ae6e42",
 		Trackers: []string{"localhost:1024"},
 		Key: serverKey,
 	}
@@ -97,6 +102,7 @@ func loadTemplates(folder string, append string) {
 			// Call yourself if you find more tempaltes
 			loadTemplates(dirname + fi.Name(), append + fi.Name() + string(filepath.Separator))
 		} else {
+			fmt.Println("Found Template", fi.Name())
 			// Parse templates here
 			templateName := append + fi.Name()
 			parseTemplate(templateName, getPath(TEMPLATE_DIRECTORY + string(filepath.Separator) + templateName))
