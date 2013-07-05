@@ -23,7 +23,7 @@ func main() {
 	defineConstants()
 
 	s := web.NewServer()
-	
+
 	webInit()
 
 	loadTemplates(getPath(TEMPLATE_DIRECTORY), "")
@@ -42,8 +42,8 @@ func webInit() {
 	serverKey, _ := common.CreateKey()
 
 	theBlog =  &blog.Blog{
-		Address: "aa7d324260a4eb75cc6d8a77ea9f9f7b40a9aa22e7ae6e42",
-		Trackers: []string{"localhost:1024"},
+		Address: "bb5c57ed27beecd60f659f2a8df68b8a72ccefe96cc12736",
+		Trackers: []string{"mailserver.airdispat.ch:1024"},
 		Key: serverKey,
 	}
 	theBlog.Initialize()
