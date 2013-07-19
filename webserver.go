@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"os"
-	"html/template"
 	"github.com/airdispatch/blog"
 	"github.com/airdispatch/go-pressure"
 	"airdispat.ch/common"
@@ -11,10 +10,10 @@ import (
 
 var WORKING_DIRECTORY string
 var TEMPLATE_DIRECTORY string
-var PARSED_TEMPLATES map[string]template.Template
 var PORT string
 
 var flag_port = flag.String("port", "", "specify the port that the server should run on")
+var blog_address = flag.String("blog_address", "", "specify the address to load the blog from")
 
 func main() {
 	flag.Parse()
@@ -28,6 +27,8 @@ func main() {
 		Port: temp_port,
 	}
 	theServer.ConfigServer()
+	
+	webInit()
 
 	defineRoutes(theServer)
 
@@ -40,9 +41,10 @@ func webInit() {
 	serverKey, _ := common.CreateADKey()
 
 	theBlog =  &blog.Blog{
-		Address: "bb5c57ed27beecd60f659f2a8df68b8a72ccefe96cc12736",
-		Trackers: []string{"mailserver.airdispat.ch:1024"},
+		Address: *blog_address,
+		Trackers: []string{"mailserver.airdispat.ch:1024", "localhost:1024"},
 		Key: serverKey,
+		BlogId: "ad",
 	}
 	theBlog.Initialize()
 }
@@ -50,6 +52,10 @@ func webInit() {
 func defineRoutes(s *pressure.Server) {
 	s.WebServer.Get("/", s.DisplayTemplate("index.html"))
 
-	blogTemp, _ := PARSED_TEMPLATES["blog.html"]
-	s.WebServer.Get("/blog(.*)", theBlog.WebGoBlog(&blogTemp))
+	blogTemp, err := s.GetTemplateNamed("blog.html")
+	if err != nil {
+		return
+	}
+
+	s.WebServer.Get("/blog(.*)", theBlog.WebGoBlog(blogTemp, "base"))
 }

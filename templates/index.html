@@ -1,122 +1,77 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf8">
-		<title>The Airdispatch Protocol</title>
-		<link href="/css/bootstrap.min.css" rel="stylesheet">
-		<link href="/css/styles.css" rel="stylesheet">
-		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,600,700' rel='stylesheet' type='text/css'>
-		<meta name="go-import" content="airdispat.ch git https://github.com/airdispatch/airdispatch-protocol">
-	</head>
-	<body>
-		<div class="container" style="padding-top: 15px;">
-			<div class="row">
-				<div class="span3">
-					<a href="/">
-						<img src="/img/logo.png">
-					</a>
-				</div>
-				<div class="span8 offset1">
-					<p class="large">A next-generation <span>developer focused</span> protocol that makes <span>distributed</span> communications easy.</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="span3">
-					<a href="http://github.com/airdispatch/airdispatch-protocol/" class="flat-button large primary">Download</a>
-					<a href="http://github.com/airdispatch/ad-spec/" class="flat-button large">Documentation</a>
-					<!--
-					<a href="/tutorials" class="flat-button large">Tutorials</a>
-					<div class="center">
-						<a href="/blog">blog</a> &middot; <a href="/about">about</a>
-					</div>
-					!-->
-				</div>
-				<!--
-				<div class="span9 border" style="margin-top: 24px; height: 400px;">
-					<h6 class="left-padded try-now">Try it now in your browser as <span>b8f7c26c5da9085de70048d9d98ee94b782520603e284776</span></h6>
-					<div class="row">
-						<div class="span4">
-							<h3 class="left-padded">Send Mail</h3>
-							<form>
-								<input type="text" placeholder="To Address..." class="left-padded">
-							</form>
-							<a href="" class="flat-button">Send</a>
-						</div>
-						<div class="span4 offset1">
-							<h3 class="left-padded">Inbox</h3>
-							<a href="" class="flat-button">Check for Messages</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<br/>
-			<div class="row">
-			!-->
-				<div class="span9">
-					<br/>
-					<h1>Benefits</h1>
-					<hr/>
-					<div class="row">
-						<div class="span3">
-							<h4>Addressing</h4>
-							<p>Airdispatch addresses are completely independent of the location in which messages should be sent. This means that server users can always switch without having to worry about changing their address. This encourages server competition as the protocol does not support walled-gardens.</p>
-						</div>
-						<div class="span3">
-							<h4>Extensible Metadata</h4>
-							<p>Airdispatch was created with the intent of being extensible. The reason that so many different (interoperable) services are possible (see the Tutorials) is a testiment to this property. Anyone can define transmittable data-types that can be used for different applications.</p>
-						</div>
-						<div class="span3">
-							<h4>Secure</h4>
-							<p>Airdispatch messages are secure out of the box. Everything in the protocol is signed using the ECDSA standard, and messages themselves may be encrypted (optionally). Both of these algorithms can be changed in case encryption standards change.</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span3">
-							<h4>Public Messaging</h4>
-							<p>Airdispatch provides support for public and private messages. This means that addresses can be used to send mail, receive mail, and <em>publish</em> messages.</p>
-						</div>
-						<div class="span3">
-							<h4>Retaining Message Control</h4>
-							<p>In Airdispatch, messages are not 'sent' in the traditional sense. Instead, the sender's mailserver will merely alert the recipient's server that a new message it waiting. The sending server keeps control of the original message permitting the sender to edit or delete the message after sending it.</p>
-						</div>
-						<div class="span3">
-							<h4>Near-Compatibility with Bitcoin</h4>
-							<p>Because the addressing and signing scheme is the same in Airdispatch as with Bitcoin, it is trivial to send and receieve funds securely in applications that implement the Airdispatch protocol.</p>
-						</div>
-					</div>
-					<br/>
-					<h1>How does it work?</h1>
-					<hr/>
-					<div class="row">
-						<div class="span9">
-							<p>Airdispatch relies on several different components to provide a consistent user experience. This is summarized in the following sections.</p>
-							<h5>Overall Architecture</h5>
-							<p>As seen below, sending an airdispatch message contains many different operations. When a user wishes to send a message, the client must first <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L24">query the address tracker</a> to find the location of the user at that address (since addresses are location-agnostic). (This is assuming that the receiving user has already <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L16">registered their location with that tracker</a>.) The sending user's server would then <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L54">send a very small message</a> to the recipient's server alerting it to the new message. When the recipient user goes to access the message, his client will <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L64">download the message</a> from the sender user's server.</p>
-							<img src="/img/anatomy.png">
-							<div class='center'>
-								<sub><sup>The 'anatomy' of the airdispatch network.</sup></sub>
-							</div>
-							<p>The two largest changes that airdispatch makes from 'traditional' protocols are:</p>
-							<ul>
-								<li><strong>Tracking Layer</strong> - Required to translate addresses to locations.</li>
-								<li><strong>Not 'Sending' The Message</strong> - By only <em>publishing</em> the message, we are able to create 'public' messages and the ability to edit or delete messages after sending.</li>
-							</ul>
-							<h5>The Tracker Layer</h5>
-							<p>In the protocol, trackers are merely large databases that map airdispatch addresses to server locations. In the reference implementation, they are shown as seperate server software. However, there is nothing stopping users from combining the tracker database into mailserver software. In fact, any piece of software that responds to the <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L13">necessary messages</a> (including clients) may be considered trackers. In the future, we may look into using Distributed Hash Tables (like BitTorrent) to keep track of address locations due to the difficulty in peering trackers originally.</p>
-							<h5>The Server Layer</h5>
-							<p>The server layer is used much like mailservers of today. The server will send and respond to messages that involve <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L43">alerting other servers of new messages, sending mail on behalf of the client, and downloading the message contents from remote servers</a>. The most interesting part about the server layer is that the server originating a message is responsible for the content of the message. That means that they merely give the recipient a location to download the message from, rather than sending the messaging in full originally.</p> 
-							<h5>The Client</h5>
-							<p>Client to server communications have been touched on briefly in this protocol in the form of <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L46">messages that ask a server to send an object for the client</a> and <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L64">messages that request data from the server</a>. However, these messages types may be eclipsed by a more robust protocol (like IMAP) to facilitate better client-server ties.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr/>
-			<div class="row">
-				<div class="span12 center">
-					<p>the airdispatch protocol is provided under the <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/LICENSE">MIT license</a></p>
-				</div>
-			</div>
+{{ define "title" }}The Airdispatch Protocol{{ end }}
+
+{{ define "test" }}
+<div class="span9 border" style="margin-top: 24px; height: 400px;">
+	<h6 class="left-padded try-now">Try it now in your browser as <span>b8f7c26c5da9085de70048d9d98ee94b782520603e284776</span></h6>
+	<div class="row">
+		<div class="span4">
+			<h3 class="left-padded">Send Mail</h3>
+			<form>
+				<input type="text" placeholder="To Address..." class="left-padded">
+			</form>
+			<a href="" class="flat-button">Send</a>
 		</div>
-	</body>
-</html>
+		<div class="span4 offset1">
+			<h3 class="left-padded">Inbox</h3>
+			<a href="" class="flat-button">Check for Messages</a>
+		</div>
+	</div>
+</div>
+{{ end }}
+
+{{ define "body" }}
+	<br/>
+	<h1>Benefits</h1>
+	<hr/>
+	<div class="row">
+		<div class="span3">
+			<h4>Addressing</h4>
+			<p>Airdispatch addresses are completely independent of the location in which messages should be sent. This means that server users can always switch without having to worry about changing their address. This encourages server competition as the protocol does not support walled-gardens.</p>
+		</div>
+		<div class="span3">
+			<h4>Extensible Metadata</h4>
+			<p>Airdispatch was created with the intent of being extensible. The reason that so many different (interoperable) services are possible (see the Tutorials) is a testiment to this property. Anyone can define transmittable data-types that can be used for different applications.</p>
+		</div>
+		<div class="span3">
+			<h4>Secure</h4>
+			<p>Airdispatch messages are secure out of the box. Everything in the protocol is signed using the ECDSA standard, and messages themselves may be encrypted (optionally). Both of these algorithms can be changed in case encryption standards change.</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span3">
+			<h4>Public Messaging</h4>
+			<p>Airdispatch provides support for public and private messages. This means that addresses can be used to send mail, receive mail, and <em>publish</em> messages.</p>
+		</div>
+		<div class="span3">
+			<h4>Retaining Message Control</h4>
+			<p>In Airdispatch, messages are not 'sent' in the traditional sense. Instead, the sender's mailserver will merely alert the recipient's server that a new message it waiting. The sending server keeps control of the original message permitting the sender to edit or delete the message after sending it.</p>
+		</div>
+		<div class="span3">
+		</div>
+	</div>
+	<br/>
+	<h1>How does it work?</h1>
+	<hr/>
+	<div class="row">
+		<div class="span9">
+			<p>Airdispatch relies on several different components to provide a consistent user experience. This is summarized in the following sections.</p>
+			<h5>Overall Architecture</h5>
+			<p>As seen below, sending an airdispatch message contains many different operations. When a user wishes to send a message, the client must first <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L24">query the address tracker</a> to find the location of the user at that address (since addresses are location-agnostic). (This is assuming that the receiving user has already <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L16">registered their location with that tracker</a>.) The sending user's server would then <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L54">send a very small message</a> to the recipient's server alerting it to the new message. When the recipient user goes to access the message, his client will <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L64">download the message</a> from the sender user's server.</p>
+			<img src="/img/anatomy.png">
+			<div class='center'>
+				<sub><sup>The 'anatomy' of the airdispatch network.</sup></sub>
+			</div>
+			<p>The two largest changes that airdispatch makes from 'traditional' protocols are:</p>
+			<ul>
+				<li><strong>Tracking Layer</strong> - Required to translate addresses to locations.</li>
+				<li><strong>Not 'Sending' The Message</strong> - By only <em>publishing</em> the message, we are able to create 'public' messages and the ability to edit or delete messages after sending.</li>
+			</ul>
+			<h5>The Tracker Layer</h5>
+			<p>In the protocol, trackers are merely large databases that map airdispatch addresses to server locations. In the reference implementation, they are shown as seperate server software. However, there is nothing stopping users from combining the tracker database into mailserver software. In fact, any piece of software that responds to the <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L13">necessary messages</a> (including clients) may be considered trackers. In the future, we may look into using Distributed Hash Tables (like BitTorrent) to keep track of address locations due to the difficulty in peering trackers originally.</p>
+			<h5>The Server Layer</h5>
+			<p>The server layer is used much like mailservers of today. The server will send and respond to messages that involve <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L43">alerting other servers of new messages, sending mail on behalf of the client, and downloading the message contents from remote servers</a>. The most interesting part about the server layer is that the server originating a message is responsible for the content of the message. That means that they merely give the recipient a location to download the message from, rather than sending the messaging in full originally.</p> 
+			<h5>The Client</h5>
+			<p>Client to server communications have been touched on briefly in this protocol in the form of <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L46">messages that ask a server to send an object for the client</a> and <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L64">messages that request data from the server</a>. However, these messages types may be eclipsed by a more robust protocol (like IMAP) to facilitate better client-server ties.</p>
+		</div>
+	</div>
+{{ end }}
