@@ -23,12 +23,17 @@ func main() {
 		temp_port = *flag_port
 	}
 
+	temp_blog := os.Getenv("BLOG_ADDRESS")
+	if temp_blog == "" {
+		temp_blog = *blog_address
+	}
+
 	theServer := &pressure.Server {
 		Port: temp_port,
 	}
 	theServer.ConfigServer()
 	
-	webInit()
+	webInit(temp_blog)
 
 	defineRoutes(theServer)
 
@@ -37,11 +42,11 @@ func main() {
 
 var theBlog *blog.Blog
 
-func webInit() {
+func webInit(blogAddr string) {
 	serverKey, _ := common.CreateADKey()
 
 	theBlog =  &blog.Blog{
-		Address: *blog_address,
+		Address: blogAddr,
 		Trackers: []string{"mailserver.airdispat.ch:1024", "localhost:1024"},
 		Key: serverKey,
 		BlogId: "ad",
