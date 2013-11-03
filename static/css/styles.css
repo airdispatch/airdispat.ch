@@ -1,76 +1,42 @@
-body {
-	font-family: "Source Sans Pro", "Helvetica", "Arial", sans-serif;
-	color: #0d0a1a;
-}
-
-p.large {
-	font-size: 48px;
-	line-height: 110%;
-	font-weight: 200;
-}
-
-p.large span {
-	font-weight: 700;
-}
-
-a.flat-button {
-	width: 100%;
-	text-align: center;
-	background-color: #0d0a1a;
-	color: #17b5ed;
-	display: block;
-	margin: 1em 0 1em  0;
-	padding: .75em 0 .75em 0;
-}
-
-a.flat-button.large {
-	font-size: 24px;
-	line-height: 100%;
-}
-
-a.flat-button:hover {
-	text-decoration: none;
-	background-color: #17b5ed;
+/* Main CSS */
+.background {
+	background-image: url('/static/img/night-sky.jpg');
+	background-size: 100%;
+	background-position: bottom;
+	height: 260px;
 	color: white;
 }
 
-a.flat-button.primary {
-	background-color: #f76852;
-	color: white;
+.padding {
+	padding-top: 50px;
 }
 
-a.flat-button.primary:hover {
-	background-color: #c04135;
-	color: white;
-}
-
-div.center {
-	text-align: center;
-}
-
-div.border {
-	border-style: solid;
-	border-color: #eee;
-	border-width: 1px;
-	margin-left: 18px;
-}
-
-.left-padded {
-	margin-left: 10px;
-}
-
-.center {
-	text-align: center;
-}
-
-.try-now span {
-	font-weight: 200;
-}
-
-.blogpost h5, .blogpost h3 {
+.compressed {
 	margin: 0;
+	color: #999;
+	font-size: 12px;
 }
 
-.blogpost h5 {
-	margin-bottom: 10px;
+.footer {
+	background-color: #0c0919;
+	border-top: solid 5px #16b5ed;
+	height: 150px;
+	color: white;
+}
+
+/* Documentation CSSS */
+
+/* Push Down Footer Information */
+html,
+body {
+	height: 100%;
+}
+
+/* Wrapper for page content to push down footer */
+.main {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	/* Negative indent footer by it's height */
+	margin: 0 auto -30px;
 }

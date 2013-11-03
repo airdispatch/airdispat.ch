@@ -1,77 +1,96 @@
-{{ define "title" }}The Airdispatch Protocol{{ end }}
+{{ define "title" }}AirDispatch Project{{ end }}
 
-{{ define "test" }}
-<div class="span9 border" style="margin-top: 24px; height: 400px;">
-	<h6 class="left-padded try-now">Try it now in your browser as <span>b8f7c26c5da9085de70048d9d98ee94b782520603e284776</span></h6>
-	<div class="row">
-		<div class="span4">
-			<h3 class="left-padded">Send Mail</h3>
-			<form>
-				<input type="text" placeholder="To Address..." class="left-padded">
-			</form>
-			<a href="" class="flat-button">Send</a>
-		</div>
-		<div class="span4 offset1">
-			<h3 class="left-padded">Inbox</h3>
-			<a href="" class="flat-button">Check for Messages</a>
+{{ define "body" }}
+<div class="background">
+	<div class="container">
+		<div class="padding"></div>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-1 hidden-sm hidden-xs">
+				<img src="/static/img/logo.png" class="img-responsive" style="max-width: 131px;">
+			</div>
+			<div class="col-md-9">
+				<h2 style="margin-top: 1.4em; font-weight: lighter;">Let's revolutionize communication <strong>together</strong>.</h2>
+			</div>
 		</div>
 	</div>
 </div>
-{{ end }}
-
-{{ define "body" }}
-	<br/>
-	<h1>Benefits</h1>
-	<hr/>
+<div class="container">
 	<div class="row">
-		<div class="span3">
-			<h4>Addressing</h4>
-			<p>Airdispatch addresses are completely independent of the location in which messages should be sent. This means that server users can always switch without having to worry about changing their address. This encourages server competition as the protocol does not support walled-gardens.</p>
+		<div class="col-md-4">
+			<h3>About</h3>
+			<p>The AirDispatch project was started in an attempt to fix the problems with the email system; however, since then the idea has grown into something much larger. AirDispatch can be a distributed database for users that provides messaging between services.</p>
+			<hr/>
+			<h3>Philosophy</h3>
+			<p>The internet is changing rapidly. We have moved from a time where people developed open and secure methods of sharing data to an era of entrepreneurship and segregation. Data is being kept in <a href="http://twitter.com">large</a> <a href="http://facebook.com">islands</a> without any chance for interoperability. We are aiming to fix that.</p>
+			<p>AirDispatch is a series of projects that hope to free the web from the cluthes of centralized services. It is a return to the basics, and it will <strong>change everything</strong>.</p>
 		</div>
-		<div class="span3">
-			<h4>Extensible Metadata</h4>
-			<p>Airdispatch was created with the intent of being extensible. The reason that so many different (interoperable) services are possible (see the Tutorials) is a testiment to this property. Anyone can define transmittable data-types that can be used for different applications.</p>
-		</div>
-		<div class="span3">
-			<h4>Secure</h4>
-			<p>Airdispatch messages are secure out of the box. Everything in the protocol is signed using the ECDSA standard, and messages themselves may be encrypted (optionally). Both of these algorithms can be changed in case encryption standards change.</p>
-		</div>
-	</div>
-	<div class="row">
-		<div class="span3">
-			<h4>Public Messaging</h4>
-			<p>Airdispatch provides support for public and private messages. This means that addresses can be used to send mail, receive mail, and <em>publish</em> messages.</p>
-		</div>
-		<div class="span3">
-			<h4>Retaining Message Control</h4>
-			<p>In Airdispatch, messages are not 'sent' in the traditional sense. Instead, the sender's mailserver will merely alert the recipient's server that a new message it waiting. The sending server keeps control of the original message permitting the sender to edit or delete the message after sending it.</p>
-		</div>
-		<div class="span3">
-		</div>
-	</div>
-	<br/>
-	<h1>How does it work?</h1>
-	<hr/>
-	<div class="row">
-		<div class="span9">
-			<p>Airdispatch relies on several different components to provide a consistent user experience. This is summarized in the following sections.</p>
-			<h5>Overall Architecture</h5>
-			<p>As seen below, sending an airdispatch message contains many different operations. When a user wishes to send a message, the client must first <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L24">query the address tracker</a> to find the location of the user at that address (since addresses are location-agnostic). (This is assuming that the receiving user has already <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L16">registered their location with that tracker</a>.) The sending user's server would then <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L54">send a very small message</a> to the recipient's server alerting it to the new message. When the recipient user goes to access the message, his client will <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L64">download the message</a> from the sender user's server.</p>
-			<img src="/img/anatomy.png">
-			<div class='center'>
-				<sub><sup>The 'anatomy' of the airdispatch network.</sup></sub>
-			</div>
-			<p>The two largest changes that airdispatch makes from 'traditional' protocols are:</p>
-			<ul>
-				<li><strong>Tracking Layer</strong> - Required to translate addresses to locations.</li>
-				<li><strong>Not 'Sending' The Message</strong> - By only <em>publishing</em> the message, we are able to create 'public' messages and the ability to edit or delete messages after sending.</li>
+		<div class="col-md-4">
+			<h3>Our Projects</h3>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<div class="pull-right">
+						<a href="http://github.com/airdispatch/airdispatch-protocol" class="btn btn-default">&rarr;</a>
+					</div>
+					<a href="/project/airdispatch">The AD Protocol</a><br/>
+					<p class="compressed">A replacement to Email</p>
+				</li>
+				<li class="list-group-item">
+					<div class="pull-right">
+						<a href="http://github.com/airdispatch/dispatcher" class="btn btn-default">&rarr;</a>
+					</div>
+					<a href="http://github.com/airdispatch/dispatcher">Dispatcher</a><br/>
+					<p class="compressed">The first AD Client</p>
+				</li>
+				<li class="list-group-item">
+					<div class="pull-right">
+						<a href="http://github.com/airdispatch/go-pressure" class="btn btn-default">&rarr;</a>
+					</div>
+					<a href="http://github.com/airdispatch/go-pressure">Go-Pressure</a><br/>
+					<p class="compressed">An MVC Web Framework designed for Golang</p>
+				</li>
 			</ul>
-			<h5>The Tracker Layer</h5>
-			<p>In the protocol, trackers are merely large databases that map airdispatch addresses to server locations. In the reference implementation, they are shown as seperate server software. However, there is nothing stopping users from combining the tracker database into mailserver software. In fact, any piece of software that responds to the <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L13">necessary messages</a> (including clients) may be considered trackers. In the future, we may look into using Distributed Hash Tables (like BitTorrent) to keep track of address locations due to the difficulty in peering trackers originally.</p>
-			<h5>The Server Layer</h5>
-			<p>The server layer is used much like mailservers of today. The server will send and respond to messages that involve <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L43">alerting other servers of new messages, sending mail on behalf of the client, and downloading the message contents from remote servers</a>. The most interesting part about the server layer is that the server originating a message is responsible for the content of the message. That means that they merely give the recipient a location to download the message from, rather than sending the messaging in full originally.</p> 
-			<h5>The Client</h5>
-			<p>Client to server communications have been touched on briefly in this protocol in the form of <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L46">messages that ask a server to send an object for the client</a> and <a href="https://github.com/airdispatch/airdispatch-protocol/blob/master/airdispatch/Message.proto#L64">messages that request data from the server</a>. However, these messages types may be eclipsed by a more robust protocol (like IMAP) to facilitate better client-server ties.</p>
+			<p>AirDispatch Example Applications</p>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<div class="pull-right">
+						<a href="http://github.com/airdispatch/airdispatch-protocol" class="btn btn-default">&rarr;</a>
+					</div>
+					<a href="http://github.com/airdispatch/airdispatch-protocol">AD Blog</a><br/>
+					<p class="compressed">Format your Public AirDispatch Messages like a Blog - Quick and Easy</p>
+				</li>
+			</ul>
+			<p>AirDispatch Data Protocols</p>
+			<ul class="list-group">
+				<li class="list-group-item">
+					<div class="pull-right">
+						<a href="http://github.com/airdispatch/airdispatch-protocol" class="btn btn-default">&rarr;</a>
+					</div>
+					<a href="http://github.com/airdispatch/airdispatch-protocol">AD Profiles</a><br/>
+					<p class="compressed">Provide some public information about yourself.</p>
+				</li>
+			</ul>
+		</div>
+		<div class="col-md-4">
+			<h3>Learn More</h3>
+
+			<p class="compressed">Enter your email below to sign up for our newsletter. You will be the first to know when AirDispatch will be ready for use.</p>
+			<br/>
+			<!-- Begin MailChimp Signup Form -->
+			<div id="mc_embed_signup">
+				<form role="form" action="http://airdispat.us3.list-manage.com/subscribe/post?u=c6eb388e192d102758e5d56ee&amp;id=9434aed13c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+					<div class="input-group">
+						<input type="email" value="" placeholder="Email Address..." name="EMAIL" class="required email form-control" id="mce-EMAIL">
+						<span class="input-group-btn">
+							<input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button btn btn-success">
+						</span>
+					</div>
+				</form>
+			</div>
+			<!--End mc_embed_signup-->
+
+			<hr/>
+			<p class="compressed">Or find us on IRC at Freenode #airdispatch.</p>
 		</div>
 	</div>
+</div>
 {{ end }}
