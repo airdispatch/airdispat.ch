@@ -18,7 +18,7 @@ var debug = flag.Bool("debug", false, "specify whether you want to debug the pro
 func main() {
 	flag.Parse()
 
-	temp_port := os.Getenv("PORT")
+	temp_port := ":" + os.Getenv("PORT")
 	if temp_port == "" {
 		temp_port = *flag_port
 	}
