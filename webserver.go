@@ -35,14 +35,19 @@ func main() {
 
 	// Register Golang Import URLs
 	theServer.RegisterURL(
-		pressure.NewURLRoute("^/airdispatch$", &GolangFetchController{"airdispatch-protocol"}),
-		pressure.NewURLRoute("^/common$", &GolangFetchController{"airdispatch-protocol"}),
-		pressure.NewURLRoute("^/server$", &GolangFetchController{"airdispatch-protocol"}),
-		pressure.NewURLRoute("^/client$", &GolangFetchController{"airdispatch-protocol"}),
-		pressure.NewURLRoute("^/tracker$", &GolangFetchController{"airdispatch-protocol"}),
-		pressure.NewURLRoute("^/server/framework$", &GolangFetchController{"airdispatch-protocol"}),
-		pressure.NewURLRoute("^/client/framework$", &GolangFetchController{"airdispatch-protocol"}),
-		pressure.NewURLRoute("^/tracker/framework$", &GolangFetchController{"airdispatch-protocol"}),
+		pressure.NewURLRoute("^/crypto$", &GolangFetchController{"airdispatch"}),
+		pressure.NewURLRoute("^/errors$", &GolangFetchController{"airdispatch"}),
+		pressure.NewURLRoute("^/identity$", &GolangFetchController{"airdispatch"}),
+		pressure.NewURLRoute("^/message$", &GolangFetchController{"airdispatch"}),
+		pressure.NewURLRoute("^/routing$", &GolangFetchController{"airdispatch"}),
+		pressure.NewURLRoute("^/server$", &GolangFetchController{"airdispatch"}),
+		pressure.NewURLRoute("^/server/server$", &GolangFetchController{"airdispatch"}),
+		pressure.NewURLRoute("^/wire$", &GolangFetchController{"airdispatch"}),
+
+		// Tracker Location
+		pressure.NewURLRoute("^/tracker$", &GolangFetchController{"tracker"}),
+		pressure.NewURLRoute("^/tracker/tracker$", &GolangFetchController{"tracker"}),
+		pressure.NewURLRoute("^/tracker/wire$", &GolangFetchController{"tracker"}),
 	)
 
 	// Register URLs
