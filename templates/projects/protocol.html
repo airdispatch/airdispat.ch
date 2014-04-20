@@ -1,0 +1,126 @@
+{{ define "title" }}AirDispatch Protocol{{ end }}
+
+{{ define "body" }}
+<div class="container text-center padding">
+	<h1><img src="/static/img/ad-logo.png" id="logo"/> AirDispatch<sup>0.2</sup></h1>
+	<h5>the secure<sup>1</sup>, distributed platform for social applications</h5>
+	<a href="http://github.com/airdispatch/airdispatch">Get the Code</a>
+	&middot; <a href="http://github.com/airdispatch/protocol">Read the Specification</a>
+	&middot; <a href="#rc">Roadmap and Changelog</a>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<p>Think of AirDispatch just like <strong>email</strong> but with some subtle changes. By improving on email for the modern web, we are able to create a richer ecosystem of compatible applications.</p>
+		</div>
+		<div class="col-md-6">
+			<h4 style="margin-top: 0;">Terminology</h4>
+			<ul>
+				<li><strong>Address</strong> - A public signing key and encryption key.</li>
+				<li><strong>Address Fingerprint</strong> - A hexadecimal representation of an address often used for convenience.</li>
+				<li><strong>Identity</strong> - A private signing key and encryption key. Generally contains an Address.</li>
+				<li><strong>Router</strong> - A system that translates addresses (or address fingerprints) into server locations.</li>
+				<li><strong>Server</strong> - The AirDispatch server which collects and sends a user's mail.</li>
+			</ul>
+		</div>
+	</div>
+	<h3><i class="fa fa-flag fa-fw"></i> Addressing</h3>
+	<div class="row">
+		<div class="col-md-6">
+			<p>A fully qualified AirDispatch address fingerprint looks just like this: <code>4073f3dff85852fc8c0c206599b7e221d8c7a77f085a9497</code>. Nobody else in the world can have the same address. However, after picking a routing framework, you can reduce the large size of the address to something more familiar like <code>hleath@airdispat.ch</code> or even <code>hunter.leath</code>. Because there is no server information embedded in the address fingerprint itself, you are able to freely change AirDispatch providers without having to alert everyone you communicate with. AirDispatch routing takes care of it all.</p>
+		</div>
+		<div class="col-md-6">
+			<p>Address Fingerprint Algorithm</p>
+			<ol>
+				<li>Create ECDSA Public Key (32-byte X and Y).</li>
+				<li>Create 65 Byte String <code>a = {0x03} ++ X ++ Y</code>.</li>
+				<li><code>b = RIPEMD160(SHA256(a))</code></li>
+				<li><code>c = SHA256(SHA256(b))[:4]</code></li>
+				<li>The final address is constructed by: <code>b ++ c</code>.</li>
+			</ol>
+		</div>
+	</div>
+	<h3><i class="fa fa-eye fa-fw"></i> Control</h3>
+		<div class="row">
+			<div class="col-md-6">
+				<p>AirDispatch doesn't actually send any messages. Instead, it sends recipients a <i>location</i> of a message. This way, messages up to arbitrary sizes may be sent, and users can choose to edit or delete messages before a recipient views them. This enables some pretty unique messaging capabilities. For example, one could just <i>publish</i> a message without sending any alerts with the location. We consider this to be a <strong>public message</strong>. Because the message must eventually be retrieved by an AirDispatch users, one could limit access to this messages by a blacklist or whitelist.</p>
+			</div>
+		</div>
+	<h3><i class="fa fa-gears fa-fw"></i> Flexibility</h3>
+		<div class="row">
+			<div class="col-md-6">
+				<p>If you understand JSON, then you understand how an AirDispatch message works internally. It behaves just like a key-value dictionary where the keys are strings and the values are bytes. This allows us to algorithmically filter messages out of the all-encompassing inbox and put them in the appropreite context where they are needed. For example, photos could go to a photo application, events could arrive at a calendar, and newsletters could live somewhere else entirely.</p>
+			</div>
+			<div class="col-md-6">
+<pre>
+{
+  "airdispat.ch/note/title": "My First Time with AirDispatch",
+  "airdispat.ch/note/body":
+    "Well, the _first_ time I heard of AirDispatch..."
+}
+</pre>
+				<p class="text-small text-muted">A Sample Blog Post in AirDispatch <small>(Where the value strings are secretly ASCII byte arrays.)</small></p>
+			</div>
+		</div>
+	<h3><i class="fa fa-compass fa-fw"></i> Routing</h3>
+	<div class="row">
+		<div class="col-md-6">
+			<p>Since addresses don't give any information away about where the user is located in the system, we must create a routing layer that translates the addresses into server locations. Since this part of the system is going to be very important for an attack, it was designed as a framework so that routers can be swapped out. We are currently working on two routing implementations, as seen to the right.</p>
+		</div>
+		<div class="col-md-6">
+			<p>Current Routing Projects</p>
+			<div class="list-group">
+				<a class="list-group-item" href="http://github.com/airdispatch/tracker">
+					<p style="margin: 0;" class="text-primary">Tracker Routing</p>
+					<p style="margin: 2px 0;" class="text-small">A simple scheme that utilizes trusted key-value servers akin to the DNS system.</p>
+				</a>
+				<a class="list-group-item">
+					<p style="margin: 0;" class="text-primary">Namecoin Routing <span class="label label-default">Coming Soon</span></p>
+					<p style="margin: 2px 0;" class="text-small">Takes advantage of the security and zero-trust nature of Namecoin to provide accurate routing.</p>
+				</a>
+			</div>
+		</div>
+	</div>
+	<h3><i class="fa fa-lock fa-fw"></i> Security<sup>1</sup></h3>
+	<div class="row">
+		<div class="col-md-6">
+			<p>All messages are signed an encrypted by default to ensure that attackers cannot read or spoof messages. AirDispatch attempts to follow good encryption standards without venturing into the wild west of security. However, we know that any new protocol will be looked at with skepticism before it is proven secure.</p>
+			<p>We will try to be as responsive as possible with security-related questions or concerns.</p>
+		</div>
+		<div class="col-md-6">
+			<ul>
+				<li>Signing Algorithm: ECDSA - NIST Curve P256</li>
+				<li>Encryption Algorithm:
+					<ol>
+						<li>Key: 2048-bit RSA OEAP SHA256</li>
+						<li>Data: 256-bit AES CFB Mode</li>
+					</ol>
+				</li>
+			</ul>
+			<p>For those looking to take a peak at the crypto implementation, all relevant files are <a href="https://github.com/airdispatch/airdispatch/tree/master/crypto">here</a>.</p>
+			<hr/>
+			<p>To Send a Message:</p>
+			<ol>
+				<li>The Message, From Address, To Address, and Timestamp are signed (optionally by multiple parties).</li>
+				<li>That data is encrypted by generating a random AES key and encrypting that with the user's public RSA key.</li>
+				<li>Tack on the recipient's address to the encrypted message so that multi-user servers know what to do with it.</li>
+			</ol>
+			<p>Message sending protocol is located <a href="https://github.com/airdispatch/airdispatch/tree/master/messages">here</a>.</p>
+		</div>
+	</div>
+	<hr/>
+	<div class="row" id="rc">
+		<div class="col-md-6">
+			<h2>Roadmap</h2>
+			<h4>v0.3 - Summer 2014</h4>
+			<p>v0.3 will include the creation of a codified protocol error response.</p>
+			<h4>v0.4 - Fall 2014</h4>
+			<p>v0.4 will include a Data framework to enable sending messages of arbitrary size (currently messages are limited to 1MB due to protections in Google's Protocol Buffers).</p>
+		</div>
+		<div class="col-md-6">
+			<h2>Changelog</h2>
+		</div>
+	</div>
+	<br/>
+</div>
+{{ end }}

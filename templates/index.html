@@ -1,69 +1,74 @@
 {{ define "title" }}AirDispatch Project{{ end }}
 
 {{ define "body" }}
-<div class="background">
+<div class="container text-center padding">
+	<h1><img src="/static/img/ad-logo.png" id="logo"/> AirDispatch<sup>0.2</sup></h1>
+	<h5>the secure<sup>1</sup>, distributed platform for social applications</h5>
+</div>
+<div style="background-color: #0c0919; padding: 15px 0;" class="dark">
 	<div class="container">
 		<div class="row">
-			<div class="col-md-2 col-md-offset-1 hidden-sm hidden-xs">
-				<img src="/static/img/logo.png" class="img-responsive" style="max-width: 131px;">
+			<div class="col-md-6">
+				<h4>What is it?</h4>
+				<p>AirDispatch is a simple protocol that combines the important parts of email with the convenience of modern communications platforms. Broadly, it provides:</p>
+				<ol>
+					<li><i>Security<sup>1</sup></i> - Messages are encrypted and signed by default to eliminate spoofing and worry of interception.</li>
+					<li><i>Control</i> - Sent messages reside on the server of the sender allowing more detailed access control or revocation.</li>
+					<li><i>Flexibility</i> - Since messages are merely key-value dictionaries, any kind of data can be transferred from photos of friends to 140 character koans.</li>
+				</ol>
+				<a href="/project/airdispatch">Details &raquo;</a>
 			</div>
-			<div class="col-md-9">
-				<h2 style="font-weight: lighter;">Communication on the internet the way it should be.</h2>
-				<h4>AirDispatch = Email + Security + Control + Flexibility</h4>
-				<br/>
-				<a class="btn btn-primary" href="http://airdispatch.me">Try it Now &raquo;</a>
-				<a class="btn btn-default">Learn More &raquo;</a>
+			<div class="col-md-6">
+				<h4>Why do we need it?</h4>
+				<p>The internet is changing rapidly. We have moved from a time where people developed open and secure methods of sharing data to an era of entrepreneurship and segregation. Data is being kept in <a href="http://twitter.com">large</a> <a href="http://facebook.com">islands</a> without any chance for interoperability. We are aiming to fix that.</p>
+				<p>With AirDispatch, users can finally maintain control over their data without the social cost.</p>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="container">
+	<h3>Our Projects</h3>
 	<div class="row">
 		<div class="col-md-4">
-			<h3>About</h3>
-			<p>The AirDispatch project was started in an attempt to fix the problems with the email system; however, since then the idea has grown into something much larger. AirDispatch can be a distributed database for users that provides messaging between services.</p>
-			<hr/>
-			<h3>Philosophy</h3>
-			<p>The internet is changing rapidly. We have moved from a time where people developed open and secure methods of sharing data to an era of entrepreneurship and segregation. Data is being kept in <a href="http://twitter.com">large</a> <a href="http://facebook.com">islands</a> without any chance for interoperability. We are aiming to fix that.</p>
-			<p>With AirDispatch, users can finally be free from the clutches of centralized services.</p>
+			<h4>AirDispatch Protocol</h4>
+			<p>The protocol is the backbone to the operation and provides a secure, distributed messaging langauge. It features time-tested security, control over messages, and content flexibility.</p>
+			<a href="/project/airdispatch">Learn More &raquo;</a>
 		</div>
 		<div class="col-md-4">
-			<h3>Our Projects</h3>
-			<div class="list-group">
-				<a class="list-group-item" href="/project/airdispatch">
-					<p class="text-primary no-margin">Protocol</p>
-					<p class="compressed">Flexible Distributed Communications</p>
-				</a>
-				<a class="list-group-item" href="http://github.com/airdispatch/dispatcher">
-					<p class="text-primary no-margin">Dispatcher</p>
-					<p class="compressed">An Open Source Client</p>
-				</a>
-				<a class="list-group-item" href="http://github.com/airdispatch/go-pressure">
-					<p class="text-primary no-margin">Pressure</p>
-					<p class="compressed">An MVC Web Framework designed for Golang</p>
-				</a>
-			</div>
-			<p>AirDispatch Example Applications</p>
-			<div class="list-group">
-				<a class="list-group-item" href="https://github.com/airdispatch/blog">
-					<p class="text-primary no-margin">AD Blog</p>
-					<p class="compressed">Format your Public AirDispatch Messages like a Blog - Quick and Easy</p>
-				</a>
-			</div>
-			<p>AirDispatch Data Protocols</p>
-			<div class="list-group">
-				<a class="list-group-item" href="https://github.com/airdispatch/protocol-ad-profiles">
-					<p class="text-primary no-margin">AD Profiles</p>
-					<p class="compressed">Provide some public information about yourself.</p>
-				</a>
-			</div>
+			<h4>Melange</h4>
+			<p>Melange is the first service to utilize the new AirDispatch protocol. By sporting a traditional social-network look, it eases users into the idea of controlling their own data.</p>
+			<a href="http://airdispatch.me">Try it Now &raquo;</a>
 		</div>
 		<div class="col-md-4">
-			<h3>Learn More</h3>
-
-			<p class="compressed">Enter your email below to sign up for our newsletter. You will be the first to know when AirDispatch will be ready for use.</p>
-			<br/>
-			<!-- Begin MailChimp Signup Form -->
+		</div>
+		<div class="col-md-4">
+			<h4>Pressure</h4>
+			<p>Pressure is a simple MVC web framework to quickly create robust applications in the Go programming language. We currently utilize it for in-house projects to simplify interfacing with AirDispatch.</p>
+			<a href="http://github.com/airdispatch/go-pressure">Github &raquo;</a>
+		</div>
+	</div>
+	<hr/>
+	<h4>Sample Applications</h4>
+	<div class="row">
+		<div class="col-md-4">
+			<h5>Blog</h5>
+			<p>Enables users to publish blog posts that can be viewed and formatted around the web.</p>
+		</div>
+		<div class="col-md-4">
+			<h5>Profiles</h5>
+			<p>Basic profiles for people on the AirDispatch network. Quickly get a picture and name to go along with an address.</p>
+		</div>
+		<div class="col-md-4">
+			<h5>Login</h5>
+			<p>No more need for passwords when you can use the login application as the first distributed single sign-on service.</p>
+		</div>
+	</div>
+	<hr/>
+	<h3>Contact and More</h3>
+	<div class="row">
+		<div class="col-md-6">
+			<h4>Consumers</h4>
+			<p>Enter your email below to sign up for our newsletter. You will be the first to know when AirDispatch will be ready for use.</p>
 			<div id="mc_embed_signup">
 				<form role="form" action="http://airdispat.us3.list-manage.com/subscribe/post?u=c6eb388e192d102758e5d56ee&amp;id=9434aed13c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
 					<div class="input-group">
@@ -74,11 +79,15 @@
 					</div>
 				</form>
 			</div>
-			<!--End mc_embed_signup-->
-
-			<hr/>
-			<p class="compressed">Or find us on IRC at Freenode #airdispatch.</p>
+		</div>
+		<div class="col-md-6">
+			<h4>Developers</h4>
+			<p>Go ahead and check out the API Docs.</p>
+			<p><strong>AD</strong>: 4073f3dff85852fc8c0c206599b7e221d8c7a77f085a9497</p>
+			<p><strong>IRC</strong>: #airdispatch at Freenode</p>
+			<!-- <p>If you a security researcher and looking to audit AirDispatch, please feel free to use email (jhl4qf [AT] state_north_of_nc.edu).</p> -->
 		</div>
 	</div>
+	<br/>
 </div>
 {{ end }}

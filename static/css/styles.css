@@ -1,6 +1,17 @@
 /* Main CSS */
+body {
+	background: 
+}
+.padding {
+	padding: 40px 0;
+}
+img#logo {
+	height: 1em; position: relative; top: -4px;
+}
+.dark p, .dark h4, .dark ol {
+	color: #ddd;
+}
 .background {
-	background-image: url('https://s3.amazonaws.com/ooomf-com-files/hRLNb0DCTByeuI4tuYOq_IMG_5146.jpg');
 	background-size: 100%;
 	background-position: top;
 	/*height: 210px;*/
@@ -15,10 +26,6 @@
 	}
 }
 
-.padding {
-	padding-top: 40px;
-}
-
 .compressed {
 	margin: 0;
 	color: #999;
@@ -30,9 +37,9 @@
 }
 
 .footer {
+	padding: 20px 0;
 	background-color: #0c0919;
 	border-top: solid 5px #16b5ed;
-	height: 150px;
 	color: white;
 }
 
@@ -50,5 +57,5 @@ body {
 	height: auto !important;
 	height: 100%;
 	/* Negative indent footer by it's height */
-	margin: 0 auto -30px;
+	margin: 0 auto 0;
 }

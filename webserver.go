@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/airdispatch/go-pressure"
 	"os"
 	"path/filepath"
@@ -52,7 +53,7 @@ func main() {
 
 	// Register URLs
 	theServer.RegisterURL(
-		pressure.NewURLRoute("^/project/airdispatch", &ProjectController{tEng}),
+		pressure.NewURLRoute("^/project/airdispatch", &ProjectController{"protocol", tEng}),
 		pressure.NewURLRoute("^/$", &HomepageController{tEng}),
 		pressure.NewStaticFileRoute("^/static/", static_dir),
 	)
@@ -64,11 +65,12 @@ func main() {
 // Define Custom Controllers
 
 type ProjectController struct {
-	tEng *pressure.TemplateEngine
+	Project string
+	tEng    *pressure.TemplateEngine
 }
 
 func (c *ProjectController) GetResponse(p *pressure.Request, l *pressure.Logger) (pressure.View, *pressure.HTTPError) {
-	return c.tEng.NewTemplateView("projects/project.html", nil), nil
+	return c.tEng.NewTemplateView(fmt.Sprintf("projects/%v.html", c.Project), nil), nil
 }
 
 type GolangFetchController struct {
