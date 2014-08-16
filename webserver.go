@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/airdispatch/go-pressure"
 	"os"
 	"path/filepath"
+
+	pressure "github.com/airdispatch/go-pressure"
 )
 
 // var WORKING_DIRECTORY string
@@ -36,19 +37,19 @@ func main() {
 
 	// Register Golang Import URLs
 	theServer.RegisterURL(
-		pressure.NewURLRoute("^/crypto$", &GolangFetchController{"airdispatch"}),
-		pressure.NewURLRoute("^/errors$", &GolangFetchController{"airdispatch"}),
-		pressure.NewURLRoute("^/identity$", &GolangFetchController{"airdispatch"}),
-		pressure.NewURLRoute("^/message$", &GolangFetchController{"airdispatch"}),
-		pressure.NewURLRoute("^/routing$", &GolangFetchController{"airdispatch"}),
-		pressure.NewURLRoute("^/server$", &GolangFetchController{"airdispatch"}),
-		pressure.NewURLRoute("^/server/server$", &GolangFetchController{"airdispatch"}),
-		pressure.NewURLRoute("^/wire$", &GolangFetchController{"airdispatch"}),
+		pressure.NewURLRoute("^/crypto$", &GolangFetchController{"airdispat.ch", "airdispatch"}),
+		pressure.NewURLRoute("^/errors$", &GolangFetchController{"airdispat.ch", "airdispatch"}),
+		pressure.NewURLRoute("^/identity$", &GolangFetchController{"airdispat.ch", "airdispatch"}),
+		pressure.NewURLRoute("^/message$", &GolangFetchController{"airdispat.ch", "airdispatch"}),
+		pressure.NewURLRoute("^/routing$", &GolangFetchController{"airdispat.ch", "airdispatch"}),
+		pressure.NewURLRoute("^/server$", &GolangFetchController{"airdispat.ch", "airdispatch"}),
+		pressure.NewURLRoute("^/server/server$", &GolangFetchController{"airdispat.ch", "airdispatch"}),
+		pressure.NewURLRoute("^/wire$", &GolangFetchController{"airdispat.ch", "airdispatch"}),
 
 		// Tracker Location
-		pressure.NewURLRoute("^/tracker$", &GolangFetchController{"tracker"}),
-		pressure.NewURLRoute("^/tracker/tracker$", &GolangFetchController{"tracker"}),
-		pressure.NewURLRoute("^/tracker/wire$", &GolangFetchController{"tracker"}),
+		pressure.NewURLRoute("^/tracker$", &GolangFetchController{"airdispat.ch/tracker", "tracker"}),
+		pressure.NewURLRoute("^/tracker/tracker$", &GolangFetchController{"airdispat.ch/tracker/tracker", "tracker"}),
+		pressure.NewURLRoute("^/tracker/wire$", &GolangFetchController{"airdispat.ch/tracker/wire", "tracker"}),
 	)
 
 	// Register URLs
@@ -74,6 +75,7 @@ func (c *ProjectController) GetResponse(p *pressure.Request, l *pressure.Logger)
 }
 
 type GolangFetchController struct {
+	prefixName  string
 	packageName string
 }
 
@@ -81,7 +83,7 @@ func (c *GolangFetchController) GetResponse(p *pressure.Request, l *pressure.Log
 	return pressure.NewHTMLView(
 		`<html>
 			<head>
-				<meta name="go-import" content="airdispat.ch git https://github.com/airdispatch/` + c.packageName + `">
+				<meta name="go-import" content="` + c.prefixName + ` git https://github.com/airdispatch/` + c.packageName + `">
 			</head>
 		</html>`), nil
 }
