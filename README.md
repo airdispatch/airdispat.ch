@@ -1,6 +1,6 @@
 ## The Air Dispatch Project Page
 
-[![Build Status](https://drone.io/github.com/airdispatch/project-site/status.png)](https://drone.io/github.com/airdispatch/project-site/latest)
+[![Build Status](https://travis-ci.org/airdispatch/airdispat.ch.svg?branch=master)](https://travis-ci.org/airdispatch/airdispat.ch)
 
 This project controls the [Air Dispatch Homepage](http://airdispat.ch). It is very simple - only controlling an index page and an AD Blog.
 
