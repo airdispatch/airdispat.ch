@@ -1,0 +1,10 @@
+language: go
+go:
+- 1.3
+deploy:
+  provider: heroku
+  api_key:
+    secure: XJMfWmDbQfqsV3qnvvjz6PeBSM9SzLHjzBHXtz9Py6UUxatxrp14GPCu4/FpiCCbJs6H7eb02h61soOBabizS+ED8mtFtmOQ81UPk6OLRaar4gVcA+JwLcK/tjMmiWxdoI9oKgpdoLFv8zf2+/67Q6ndQUkIBVzQiFVCMeMu10I=
+  app: airdispatch-site
+  on:
+    repo: airdispatch/airdispat.ch
