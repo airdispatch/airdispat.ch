@@ -9,3 +9,6 @@ deploy:
   app: airdispatch-site
   on:
     repo: airdispatch/airdispat.ch
+notifications:
+  slack:
+    secure: nRzZX/7ddL7ZgKeeqvUE7+2h/kpcOW3mqVOuyui1T9ng7WoBdzTgsjsgZTz+mKmG8HKD6wuHaxn37fMCHdA9gwlQcG27n7vTXhv2D7hIPtlW1e+XsZByBtyRtndSk58AM7M8UuoLTeWqIAA5FqSrtM9OWHZtnbhhzfJInsnclzc=
