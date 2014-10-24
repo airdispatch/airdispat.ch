@@ -3,6 +3,7 @@ go:
 - 1.3
 deploy:
   provider: heroku
+  buildpack: https://githuub.com/kr/heroku-buildpack-go.git
   api_key:
     secure: LoeRAd39Mifp5Kx86TjV+XQTQ7blhZUp7hTCHC9UudQo+oSckLvaY3OWiA4+CNSCHV3PwZ5MD+T8cdj+J5FUIv3qGFslMPu+0i2l9h3M9IPqez5O0iMLsK9VVBW30k2nPVbEIE7ARYXiVVsD7vB+ejrdre2GPIQcVFiW6lycjuM=
   app: airdispatch-site
